@@ -21,13 +21,19 @@
   },
   "entity": {
     "binary_sensor": {
-      "problem": { "name": "Problema" }
+      "problem": {
+        "name": "Problema"
+      }
     },
     "button": {
-      "reset_error": { "name": "Desbloquear error" }
+      "reset_error": {
+        "name": "Desbloquear error"
+      }
     },
     "climate": {
-      "stove": { "name": "Estufa" }
+      "stove": {
+        "name": "Estufa"
+      }
     },
     "select": {
       "combustion_power": {
@@ -104,10 +110,28 @@
           "unknown": "Desconocido"
         }
       },
-      "exhaust_temperature": { "name": "Temperatura de humos" },
-      "room_temperature": { "name": "Temperatura ambiente" },
-      "service_hours_left": { "name": "Horas hasta la revisión" },
-      "raw_data": { "name": "Datos brutos" }
+      "combustion_phase": {
+        "name": "Fase de combustión",
+        "state": {
+          "ignition": "Encendiendo",
+          "stabilization": "Estabilización",
+          "modulation": "Modulación",
+          "off": "Apagada",
+          "unknown": "Desconocido"
+        }
+      },
+      "exhaust_temperature": {
+        "name": "Temperatura de humos"
+      },
+      "room_temperature": {
+        "name": "Temperatura ambiente"
+      },
+      "service_hours_left": {
+        "name": "Horas hasta la revisión"
+      },
+      "raw_data": {
+        "name": "Datos brutos"
+      }
     }
   }
 }

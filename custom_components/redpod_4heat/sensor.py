@@ -17,7 +17,9 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import (
+    CODE_COMBUSTION_PHASE,
     CODE_ERROR,
+    COMBUSTION_PHASE_NAMES,
     CODE_EXHAUST_TEMP,
     CODE_ROOM_TEMP,
     CODE_SERVICE_HOURS_LEFT,
@@ -62,6 +64,14 @@ SENSORS: tuple[FourHeatSensorDescription, ...] = (
         device_class=SensorDeviceClass.ENUM,
         options=sorted(set(ERROR_NAMES.values()) | {"unknown"}),
         convert=_named(ERROR_NAMES),
+    ),
+    FourHeatSensorDescription(
+        key="combustion_phase",
+        translation_key="combustion_phase",
+        code=CODE_COMBUSTION_PHASE,
+        device_class=SensorDeviceClass.ENUM,
+        options=sorted(set(COMBUSTION_PHASE_NAMES.values()) | {"unknown"}),
+        convert=_named(COMBUSTION_PHASE_NAMES),
     ),
     FourHeatSensorDescription(
         key="exhaust_temperature",
@@ -124,7 +134,7 @@ class FourHeatSensor(FourHeatEntity, SensorEntity):
 
     @property
     def extra_state_attributes(self) -> dict[str, Any] | None:
-        if self.entity_description.key in ("state", "error"):
+        if self.entity_description.key in ("state", "error", "combustion_phase"):
             return {"code": self.coordinator.value(self.entity_description.code)}
         return None
 

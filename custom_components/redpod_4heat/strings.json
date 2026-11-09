@@ -21,13 +21,19 @@
   },
   "entity": {
     "binary_sensor": {
-      "problem": { "name": "Problem" }
+      "problem": {
+        "name": "Problem"
+      }
     },
     "button": {
-      "reset_error": { "name": "Reset error" }
+      "reset_error": {
+        "name": "Reset error"
+      }
     },
     "climate": {
-      "stove": { "name": "Stove" }
+      "stove": {
+        "name": "Stove"
+      }
     },
     "select": {
       "combustion_power": {
@@ -104,10 +110,28 @@
           "unknown": "Unknown"
         }
       },
-      "exhaust_temperature": { "name": "Exhaust temperature" },
-      "room_temperature": { "name": "Room temperature" },
-      "service_hours_left": { "name": "Hours until service" },
-      "raw_data": { "name": "Raw data" }
+      "combustion_phase": {
+        "name": "Combustion phase",
+        "state": {
+          "ignition": "Ignition",
+          "stabilization": "Stabilization",
+          "modulation": "Modulation",
+          "off": "Off",
+          "unknown": "Unknown"
+        }
+      },
+      "exhaust_temperature": {
+        "name": "Exhaust temperature"
+      },
+      "room_temperature": {
+        "name": "Room temperature"
+      },
+      "service_hours_left": {
+        "name": "Hours until service"
+      },
+      "raw_data": {
+        "name": "Raw data"
+      }
     }
   }
 }

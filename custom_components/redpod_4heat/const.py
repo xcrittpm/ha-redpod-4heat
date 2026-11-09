@@ -18,6 +18,7 @@ CODE_EXHAUST_TEMP: Final = "30005"
 CODE_ROOM_TEMP: Final = "30006"
 CODE_SETPOINT_READ: Final = "30138"
 CODE_SERVICE_HOURS_LEFT: Final = "20119"
+CODE_COMBUSTION_PHASE: Final = "30011"  # meaning only partly known
 
 # Writable codes ("B" marker)
 CODE_SETPOINT_WRITE: Final = "20493"
@@ -62,6 +63,15 @@ OFF_STATES: Final = frozenset({0, 7, 8, 9})
 IGNITION_STATES: Final = frozenset({1, 2, 3, 4, 10, 30, 31, 32, 33, 34})
 HEATING_STATES: Final = frozenset({5, 6, 13})
 IDLE_STATES: Final = frozenset({11})
+
+# Combustion phase (code 30011). Only the values seen together with a known
+# stove state are named; anything else is reported as "unknown".
+COMBUSTION_PHASE_NAMES: Final[dict[int, str]] = {
+    -1: "ignition",
+    0: "stabilization",
+    7: "off",
+    9: "modulation",
+}
 
 # Error codes (code 30002), as shown on the display (ErXX)
 ERROR_NAMES: Final[dict[int, str]] = {
