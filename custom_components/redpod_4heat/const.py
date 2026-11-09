@@ -36,6 +36,13 @@ AUTO_VALUE: Final = 6
 MIN_SETPOINT: Final = 5
 MAX_SETPOINT: Final = 40
 
+# Heat output from the Red-Pod P0147 manual (minimum and nominal power).
+MIN_HEAT_KW: Final = 4.1
+MAX_HEAT_KW: Final = 8.3
+
+# Show a repair issue when this many hours or fewer are left until service.
+SERVICE_WARNING_HOURS: Final = 50
+
 # Stove states (code 30001)
 STATE_NAMES: Final[dict[int, str]] = {
     0: "off",

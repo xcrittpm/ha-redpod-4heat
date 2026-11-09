@@ -129,9 +129,21 @@
       "service_hours_left": {
         "name": "Hours until service"
       },
+      "heat_power": {
+        "name": "Heat output (estimated)"
+      },
+      "heat_energy": {
+        "name": "Heat produced (estimated)"
+      },
       "raw_data": {
         "name": "Raw data"
       }
+    }
+  },
+  "issues": {
+    "service_due": {
+      "title": "{name}: service due soon",
+      "description": "{name} reports {hours} hours left until its scheduled service (every 2100 hours). Book the maintenance; after it, the technician resets the counter."
     }
   }
 }

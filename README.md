@@ -18,7 +18,9 @@ Control a Red-Pod pellet stove fitted with a **4Heat WiFi module** from Home Ass
 | **Problem** | On while the stove reports an error (handy for notifications) |
 | **Reset error** | Clears the error once its cause is gone |
 | **Exhaust / room temperature** | Live readings |
-| **Hours until service** | Counts down to the 2100 h maintenance warning |
+| **Hours until service** | Counts down to the 2100 h maintenance warning. With 50 h or less left, a warning appears in **Settings → Repairs** |
+| **Heat output (estimated)** | kW, from the state and power setting: 4.1 kW at minimum/modulation, 8.3 kW at full power, P1–P5 in between |
+| **Heat produced (estimated)** | kWh, adds up the estimated output over time. Usable in the Energy dashboard |
 | **Raw data** (disabled by default) | Every code the module reports, to help decode new ones |
 
 The stove's thermostat also shows up in Apple Home or Google Home if you expose it through Home Assistant.

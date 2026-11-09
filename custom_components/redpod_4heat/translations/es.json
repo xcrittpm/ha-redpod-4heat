@@ -129,9 +129,21 @@
       "service_hours_left": {
         "name": "Horas hasta la revisión"
       },
+      "heat_power": {
+        "name": "Potencia calorífica estimada"
+      },
+      "heat_energy": {
+        "name": "Calor producido estimado"
+      },
       "raw_data": {
         "name": "Datos brutos"
       }
+    }
+  },
+  "issues": {
+    "service_due": {
+      "title": "{name}: revisión próxima",
+      "description": "{name} indica que quedan {hours} horas para la revisión (cada 2100 horas). Pide la cita de mantenimiento; después, el técnico reinicia el contador."
     }
   }
 }

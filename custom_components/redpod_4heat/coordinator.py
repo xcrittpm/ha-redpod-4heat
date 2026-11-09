@@ -7,10 +7,22 @@ import logging
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
+from homeassistant.helpers import issue_registry as ir
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .api import FourHeatClient, FourHeatError, Reading
-from .const import DOMAIN, SCAN_INTERVAL
+from .const import (
+    AUTO_VALUE,
+    CODE_COMBUSTION_POWER,
+    CODE_SERVICE_HOURS_LEFT,
+    CODE_STATE,
+    DOMAIN,
+    HEATING_STATES,
+    MAX_HEAT_KW,
+    MIN_HEAT_KW,
+    SCAN_INTERVAL,
+    SERVICE_WARNING_HOURS,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -43,7 +55,48 @@ class FourHeatCoordinator(DataUpdateCoordinator[dict[str, Reading]]):
         # sometimes reports a shorter list).
         merged = dict(self.data or {})
         merged.update(readings)
+        self._update_service_issue(merged)
         return merged
+
+    def _update_service_issue(self, data: dict[str, Reading]) -> None:
+        """Show a repair issue when the service is due soon."""
+        issue_id = f"service_due_{self.config_entry.entry_id}"
+        hours = data.get(CODE_SERVICE_HOURS_LEFT)
+        if hours is not None and hours.value <= SERVICE_WARNING_HOURS:
+            ir.async_create_issue(
+                self.hass,
+                DOMAIN,
+                issue_id,
+                is_fixable=False,
+                severity=ir.IssueSeverity.WARNING,
+                translation_key="service_due",
+                translation_placeholders={
+                    "name": self.config_entry.title,
+                    "hours": str(max(hours.value, 0)),
+                },
+            )
+        else:
+            ir.async_delete_issue(self.hass, DOMAIN, issue_id)
+
+    def estimated_heat_kw(self) -> float | None:
+        """Estimate the heat output from the state and power setting.
+
+        In Auto the stove burns at full power until the room is 1 °C above the
+        target, then drops to minimum (state "modulation"), as the manual
+        describes. In Manual, P1-P5 are spread evenly between minimum and
+        nominal power.
+        """
+        state = self.value(CODE_STATE)
+        if state is None:
+            return None
+        if state not in HEATING_STATES:
+            return 0.0
+        if state == 6:  # modulation
+            return MIN_HEAT_KW
+        level = self.value(CODE_COMBUSTION_POWER)
+        if level is None or level == AUTO_VALUE or not 1 <= level <= 5:
+            return MAX_HEAT_KW
+        return round(MIN_HEAT_KW + (level - 1) * (MAX_HEAT_KW - MIN_HEAT_KW) / 4, 2)
 
     def value(self, code: str) -> int | None:
         """Return the current value of a code, or None if unknown."""

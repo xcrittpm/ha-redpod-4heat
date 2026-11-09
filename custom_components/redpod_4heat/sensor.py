@@ -4,16 +4,24 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
+import time
 from typing import Any
 
 from homeassistant.components.sensor import (
+    RestoreSensor,
     SensorDeviceClass,
     SensorEntity,
     SensorEntityDescription,
     SensorStateClass,
 )
-from homeassistant.const import EntityCategory, UnitOfTemperature, UnitOfTime
-from homeassistant.core import HomeAssistant
+from homeassistant.const import (
+    EntityCategory,
+    UnitOfEnergy,
+    UnitOfPower,
+    UnitOfTemperature,
+    UnitOfTime,
+)
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import (
@@ -113,6 +121,8 @@ async def async_setup_entry(
         if description.code in (coordinator.data or {})
     ]
     entities.append(FourHeatRawSensor(coordinator))
+    entities.append(FourHeatHeatPowerSensor(coordinator))
+    entities.append(FourHeatHeatEnergySensor(coordinator))
     async_add_entities(entities)
 
 
@@ -137,6 +147,74 @@ class FourHeatSensor(FourHeatEntity, SensorEntity):
         if self.entity_description.key in ("state", "error", "combustion_phase"):
             return {"code": self.coordinator.value(self.entity_description.code)}
         return None
+
+
+class FourHeatHeatPowerSensor(FourHeatEntity, SensorEntity):
+    """Estimated heat output right now (see FourHeatCoordinator.estimated_heat_kw)."""
+
+    _attr_translation_key = "heat_power"
+    _attr_device_class = SensorDeviceClass.POWER
+    _attr_state_class = SensorStateClass.MEASUREMENT
+    _attr_native_unit_of_measurement = UnitOfPower.KILO_WATT
+
+    def __init__(self, coordinator: FourHeatCoordinator) -> None:
+        super().__init__(coordinator, "heat_power")
+
+    @property
+    def native_value(self) -> float | None:
+        return self.coordinator.estimated_heat_kw()
+
+
+# Ignore gaps longer than this (e.g. Home Assistant was stopped) instead of
+# assuming the stove kept the same output the whole time.
+MAX_INTEGRATION_GAP_S = 600
+
+
+class FourHeatHeatEnergySensor(FourHeatEntity, RestoreSensor):
+    """Estimated heat produced, adding up the heat output over time."""
+
+    _attr_translation_key = "heat_energy"
+    _attr_device_class = SensorDeviceClass.ENERGY
+    _attr_state_class = SensorStateClass.TOTAL_INCREASING
+    _attr_native_unit_of_measurement = UnitOfEnergy.KILO_WATT_HOUR
+    _attr_suggested_display_precision = 2
+
+    def __init__(self, coordinator: FourHeatCoordinator) -> None:
+        super().__init__(coordinator, "heat_energy")
+        self._total = 0.0
+        self._last_kw: float | None = None
+        self._last_time: float | None = None
+
+    async def async_added_to_hass(self) -> None:
+        await super().async_added_to_hass()
+        if (last := await self.async_get_last_sensor_data()) is not None:
+            try:
+                self._total = float(last.native_value or 0)
+            except (TypeError, ValueError):
+                self._total = 0.0
+        self._sample()
+
+    @property
+    def native_value(self) -> float:
+        return round(self._total, 3)
+
+    def _sample(self) -> None:
+        now = time.monotonic()
+        if self._last_kw is not None and self._last_time is not None:
+            elapsed = now - self._last_time
+            if 0 < elapsed <= MAX_INTEGRATION_GAP_S:
+                self._total += self._last_kw * elapsed / 3600
+        self._last_kw = self.coordinator.estimated_heat_kw()
+        self._last_time = now
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        if self.coordinator.last_update_success:
+            self._sample()
+        else:
+            # Do not count time while the stove cannot be read.
+            self._last_kw = None
+        super()._handle_coordinator_update()
 
 
 class FourHeatRawSensor(FourHeatEntity, SensorEntity):
