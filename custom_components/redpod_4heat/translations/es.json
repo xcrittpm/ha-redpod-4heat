@@ -1,0 +1,113 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Módulo WiFi 4Heat",
+        "description": "Introduce la IP local del módulo 4Heat de la estufa. Conviene darle una IP fija en el router.",
+        "data": {
+          "host": "Dirección IP",
+          "port": "Puerto",
+          "name": "Nombre"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "No se puede conectar con el módulo. Revisa la IP y que los LED del módulo estén fijos.",
+      "unsupported": "El módulo responde, pero no con datos de una estufa."
+    },
+    "abort": {
+      "already_configured": "Esta estufa ya está configurada."
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "problem": { "name": "Problema" }
+    },
+    "button": {
+      "reset_error": { "name": "Desbloquear error" }
+    },
+    "climate": {
+      "stove": { "name": "Estufa" }
+    },
+    "select": {
+      "combustion_power": {
+        "name": "Potencia de combustión",
+        "state": {
+          "auto": "Auto",
+          "level_1": "P1",
+          "level_2": "P2",
+          "level_3": "P3",
+          "level_4": "P4",
+          "level_5": "P5"
+        }
+      },
+      "room_fan": {
+        "name": "Ventilador ambiente",
+        "state": {
+          "auto": "Auto",
+          "level_1": "1",
+          "level_2": "2",
+          "level_3": "3",
+          "level_4": "4",
+          "level_5": "5"
+        }
+      },
+      "ducted_fan": {
+        "name": "Ventilador canalizado",
+        "state": {
+          "auto": "Auto",
+          "level_1": "1",
+          "level_2": "2",
+          "level_3": "3",
+          "level_4": "4",
+          "level_5": "5"
+        }
+      }
+    },
+    "sensor": {
+      "state": {
+        "name": "Estado",
+        "state": {
+          "off": "Apagada",
+          "check_up": "Comprobación",
+          "ignition": "Encendiendo",
+          "stabilization": "Estabilización",
+          "run": "Funcionando",
+          "modulation": "Modulación",
+          "extinguishing": "Apagándose",
+          "safety": "Seguridad",
+          "block": "Bloqueada",
+          "recover_ignition": "Recuperando encendido",
+          "standby": "En espera",
+          "unknown": "Desconocido"
+        }
+      },
+      "error": {
+        "name": "Error",
+        "state": {
+          "none": "Ninguno",
+          "safety_thermostat": "Er01 Termostato de seguridad",
+          "pressure_switch": "Er02 Presostato de humos",
+          "flame_out": "Er03 Llama apagada o sin pellets",
+          "water_overtemperature": "Er04 Exceso de temperatura del agua",
+          "exhaust_overtemperature": "Er05 Exceso de temperatura de humos",
+          "encoder_no_signal": "Er07 Extractor sin señal del encoder",
+          "encoder_regulation": "Er08 Fallo de regulación del extractor",
+          "low_water_pressure": "Er09 Presión de agua baja",
+          "high_water_pressure": "Er10 Presión de agua alta",
+          "clock_error": "Er11 Fecha y hora perdidas",
+          "ignition_failure": "Er12 Fallo de encendido",
+          "power_failure": "Er15 Corte de corriente",
+          "display_link": "Er16 Fallo de comunicación con la pantalla",
+          "pressure_sensor": "Er39 Sensor de presión",
+          "door_open": "Er44 Puerta abierta",
+          "unknown": "Desconocido"
+        }
+      },
+      "exhaust_temperature": { "name": "Temperatura de humos" },
+      "room_temperature": { "name": "Temperatura ambiente" },
+      "service_hours_left": { "name": "Horas hasta la revisión" },
+      "raw_data": { "name": "Datos brutos" }
+    }
+  }
+}

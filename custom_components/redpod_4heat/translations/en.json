@@ -1,0 +1,113 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "4Heat WiFi module",
+        "description": "Enter the local IP address of the stove's 4Heat module. Give it a fixed IP in your router.",
+        "data": {
+          "host": "IP address",
+          "port": "Port",
+          "name": "Name"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not reach the module. Check the IP address and that the module's LEDs are steady.",
+      "unsupported": "The module answered, but not with stove data."
+    },
+    "abort": {
+      "already_configured": "This stove is already configured."
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "problem": { "name": "Problem" }
+    },
+    "button": {
+      "reset_error": { "name": "Reset error" }
+    },
+    "climate": {
+      "stove": { "name": "Stove" }
+    },
+    "select": {
+      "combustion_power": {
+        "name": "Combustion power",
+        "state": {
+          "auto": "Auto",
+          "level_1": "P1",
+          "level_2": "P2",
+          "level_3": "P3",
+          "level_4": "P4",
+          "level_5": "P5"
+        }
+      },
+      "room_fan": {
+        "name": "Room fan",
+        "state": {
+          "auto": "Auto",
+          "level_1": "1",
+          "level_2": "2",
+          "level_3": "3",
+          "level_4": "4",
+          "level_5": "5"
+        }
+      },
+      "ducted_fan": {
+        "name": "Ducted fan",
+        "state": {
+          "auto": "Auto",
+          "level_1": "1",
+          "level_2": "2",
+          "level_3": "3",
+          "level_4": "4",
+          "level_5": "5"
+        }
+      }
+    },
+    "sensor": {
+      "state": {
+        "name": "State",
+        "state": {
+          "off": "Off",
+          "check_up": "Check-up",
+          "ignition": "Ignition",
+          "stabilization": "Stabilization",
+          "run": "Running",
+          "modulation": "Modulation",
+          "extinguishing": "Shutting down",
+          "safety": "Safety",
+          "block": "Blocked",
+          "recover_ignition": "Recovering ignition",
+          "standby": "Standby",
+          "unknown": "Unknown"
+        }
+      },
+      "error": {
+        "name": "Error",
+        "state": {
+          "none": "None",
+          "safety_thermostat": "Er01 Safety thermostat",
+          "pressure_switch": "Er02 Exhaust pressure switch",
+          "flame_out": "Er03 Flame out or no pellets",
+          "water_overtemperature": "Er04 Water over temperature",
+          "exhaust_overtemperature": "Er05 Exhaust over temperature",
+          "encoder_no_signal": "Er07 Exhaust fan: no encoder signal",
+          "encoder_regulation": "Er08 Exhaust fan: regulation failed",
+          "low_water_pressure": "Er09 Low water pressure",
+          "high_water_pressure": "Er10 High water pressure",
+          "clock_error": "Er11 Date and time lost",
+          "ignition_failure": "Er12 Ignition failure",
+          "power_failure": "Er15 Power failure",
+          "display_link": "Er16 Display communication",
+          "pressure_sensor": "Er39 Pressure sensor",
+          "door_open": "Er44 Door open",
+          "unknown": "Unknown"
+        }
+      },
+      "exhaust_temperature": { "name": "Exhaust temperature" },
+      "room_temperature": { "name": "Room temperature" },
+      "service_hours_left": { "name": "Hours until service" },
+      "raw_data": { "name": "Raw data" }
+    }
+  }
+}
