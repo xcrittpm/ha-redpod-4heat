@@ -113,9 +113,13 @@
       "combustion_phase": {
         "name": "Combustion phase",
         "state": {
+          "check_up": "Check-up",
           "ignition": "Ignition",
           "stabilization": "Stabilization",
+          "transition": "Transition",
           "modulation": "Modulation",
+          "recover_ignition": "Recovering ignition",
+          "extinguishing": "Shutting down",
           "off": "Off",
           "unknown": "Unknown"
         }

@@ -76,8 +76,12 @@ IDLE_STATES: Final = frozenset({11})
 COMBUSTION_PHASE_NAMES: Final[dict[int, str]] = {
     -1: "ignition",
     0: "stabilization",
-    7: "off",
+    1: "transition",
+    6: "recover_ignition",
+    7: "extinguishing",
     9: "modulation",
+    110: "off",
+    120: "check_up",
 }
 
 # Error codes (code 30002), as shown on the display (ErXX)
