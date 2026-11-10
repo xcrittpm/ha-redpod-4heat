@@ -45,7 +45,7 @@ class FourHeatClimate(FourHeatEntity, ClimateEntity):
 
     _attr_name = None
     _attr_translation_key = "stove"
-    _attr_temperature_unit = UnitOfTemperature.CELSIUS
+    _attr_native_temperature_unit = UnitOfTemperature.CELSIUS
     _attr_hvac_modes = [HVACMode.HEAT, HVACMode.OFF]
     _attr_min_temp = MIN_SETPOINT
     _attr_max_temp = MAX_SETPOINT
