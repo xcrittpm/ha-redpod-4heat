@@ -14,12 +14,12 @@ Control a Red-Pod pellet stove fitted with a **4Heat WiFi module** from Home Ass
 | **Ducted fan** | Auto or 1–5 (only if your stove reports it) |
 | **State** | Off, Ignition, Stabilization, Running, Modulation, Standby, Shutting down… |
 | **Error** | The display code with its meaning, e.g. "Er44 Door open" |
-| **Combustion phase** | Code 30011 shown by name (Check-up, Ignition, Stabilization, Modulation, Shutting down, Off…). Only values seen together with a known state are named; others show "Unknown" and the raw number is in the `code` attribute |
+| **Combustion phase** | Code 30011 shown by name (Check-up, Ignition, Stabilization, Power 1–5, Modulation, Shutting down, Off…). While running it shows the power level the stove is actually burning at, also in Auto. Only values seen together with a known state are named; others show "Unknown" and the raw number is in the `code` attribute |
 | **Problem** | On while the stove reports an error (handy for notifications) |
 | **Reset error** | Clears the error once its cause is gone |
 | **Exhaust / room temperature** | Live readings |
 | **Hours until service** | Counts down to the 2100 h maintenance warning. With 50 h or less left, a warning appears in **Settings → Repairs** |
-| **Heat output (estimated)** | kW, from the state and power setting: 4.1 kW at minimum/modulation, 8.3 kW at full power, P1–P5 in between |
+| **Heat output (estimated)** | kW, from the actual power level: 4.1 kW at P1/modulation, 8.3 kW at P5, evenly in between |
 | **Heat produced (estimated)** | kWh, adds up the estimated output over time. Usable in the Energy dashboard |
 | **Raw data** (disabled by default) | Every code the module reports, to help decode new ones |
 
@@ -67,7 +67,7 @@ Codes confirmed on a Red-Pod P0147 stove:
 | 20575 | Room fan | 1–5, 6 = auto |
 | 20614 | Ducted fan | 1–5, 6 = auto |
 | 20119 | Hours until service | h |
-| 30011 | Combustion phase (partly known) | 120 check-up, −1 ignition, 0 stabilization, 1 transition, 9 modulation, 6 recovering ignition, 7 shutting down (also in standby), 110 off; other values unknown |
+| 30011 | Combustion phase (partly known) | 120 check-up, −1 ignition, 0 stabilization, 1–5 actual power level while running, 9 modulation, 6 recovering ignition, 7 shutting down (also in standby), 110 off; other values unknown |
 
 Still unknown on this stove: 20570, 30142, 30143, and the meaning of other 30011 values. If you decode one, please open an issue.
 

@@ -13,6 +13,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 from .api import FourHeatClient, FourHeatError, Reading
 from .const import (
     AUTO_VALUE,
+    CODE_COMBUSTION_PHASE,
     CODE_COMBUSTION_POWER,
     CODE_SERVICE_HOURS_LEFT,
     CODE_STATE,
@@ -79,23 +80,31 @@ class FourHeatCoordinator(DataUpdateCoordinator[dict[str, Reading]]):
             ir.async_delete_issue(self.hass, DOMAIN, issue_id)
 
     def estimated_heat_kw(self) -> float | None:
-        """Estimate the heat output from the state and power setting.
+        """Estimate the heat output from the state and power level.
 
-        In Auto the stove burns at full power until the room is 1 °C above the
-        target, then drops to minimum (state "modulation"), as the manual
-        describes. In Manual, P1-P5 are spread evenly between minimum and
-        nominal power.
+        While running, code 30011 reports the power level the stove is
+        actually burning at (1-5). P1-P5 are spread evenly between minimum
+        and nominal power. In modulation the stove burns at minimum. If the
+        actual level is not reported, fall back to the power setting (Auto
+        burns at full power until the room is 1 °C above the target).
         """
         state = self.value(CODE_STATE)
         if state is None:
             return None
         if state not in HEATING_STATES:
             return 0.0
+        actual = self.value(CODE_COMBUSTION_PHASE)
+        if actual is not None and 1 <= actual <= 5:
+            return self._level_kw(actual)
         if state == 6:  # modulation
             return MIN_HEAT_KW
         level = self.value(CODE_COMBUSTION_POWER)
         if level is None or level == AUTO_VALUE or not 1 <= level <= 5:
             return MAX_HEAT_KW
+        return self._level_kw(level)
+
+    @staticmethod
+    def _level_kw(level: int) -> float:
         return round(MIN_HEAT_KW + (level - 1) * (MAX_HEAT_KW - MIN_HEAT_KW) / 4, 2)
 
     def value(self, code: str) -> int | None:

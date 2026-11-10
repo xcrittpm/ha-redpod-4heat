@@ -73,10 +73,16 @@ IDLE_STATES: Final = frozenset({11})
 
 # Combustion phase (code 30011). Only the values seen together with a known
 # stove state are named; anything else is reported as "unknown".
+# While running, 1-5 is the power level the stove is actually burning at
+# (in Auto it climbs 1 -> 5, one step every 30 s).
 COMBUSTION_PHASE_NAMES: Final[dict[int, str]] = {
     -1: "ignition",
     0: "stabilization",
-    1: "transition",
+    1: "power_1",
+    2: "power_2",
+    3: "power_3",
+    4: "power_4",
+    5: "power_5",
     6: "recover_ignition",
     7: "extinguishing",
     9: "modulation",
