@@ -57,11 +57,11 @@ class FourHeatClimate(FourHeatEntity, ClimateEntity):
     )
 
     @property
-    def current_temperature(self) -> float | None:
+    def native_current_temperature(self) -> float | None:
         return self.coordinator.value(CODE_ROOM_TEMP)
 
     @property
-    def target_temperature(self) -> float | None:
+    def native_target_temperature(self) -> float | None:
         return self.coordinator.value(CODE_SETPOINT_READ)
 
     @property
