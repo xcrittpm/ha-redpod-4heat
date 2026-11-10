@@ -1,4 +1,4 @@
-"""Reset-error button for the stove."""
+"""Buttons for the stove: reset error and tank filled."""
 
 from __future__ import annotations
 
@@ -16,7 +16,13 @@ async def async_setup_entry(
     entry: FourHeatConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    async_add_entities([FourHeatResetErrorButton(entry.runtime_data, "reset_error")])
+    coordinator = entry.runtime_data
+    async_add_entities(
+        [
+            FourHeatResetErrorButton(coordinator, "reset_error"),
+            FourHeatTankFilledButton(coordinator, "tank_filled"),
+        ]
+    )
 
 
 class FourHeatResetErrorButton(FourHeatEntity, ButtonEntity):
@@ -30,3 +36,12 @@ class FourHeatResetErrorButton(FourHeatEntity, ButtonEntity):
 
     async def async_press(self) -> None:
         await self.coordinator.async_command(CMD_RESET_ERROR)
+
+
+class FourHeatTankFilledButton(FourHeatEntity, ButtonEntity):
+    """Tell Home Assistant the pellet tank was filled to the top."""
+
+    _attr_translation_key = "tank_filled"
+
+    async def async_press(self) -> None:
+        self.coordinator.user.fill()

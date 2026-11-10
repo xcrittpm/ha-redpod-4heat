@@ -21,6 +21,11 @@ Control a Red-Pod pellet stove fitted with a **4Heat WiFi module** from Home Ass
 | **Hours until service** | Counts down to the 2100 h maintenance warning. With 50 h or less left, a warning appears in **Settings → Repairs** |
 | **Heat output (estimated)** | kW, from the actual power level: 4.1 kW at P1/modulation, 8.3 kW at P5, evenly in between |
 | **Heat produced (estimated)** | kWh, adds up the estimated output over time. Usable in the Energy dashboard |
+| **Pellets in tank (estimated)** | kg left. Press **Tank filled** after filling it, or type the kg in by hand after a partial refill |
+| **Pellet level (estimated)** | % of the tank, and **Pellets time left** at the current use |
+| **Pellet use / Pellets burnt (estimated)** | kg/h now and total kg. From the manual: 0.93 kg/h at P1, 1.9 kg/h at P5. Expect 10–15 % error depending on the pellets |
+| **Tank capacity** | 15 kg by default (Red-Pod inserts). Change it for other stoves |
+| **Model / Serial number** | Text you type in; shown on the device page. The module does not report them |
 | **Raw data** (disabled by default) | Every code the module reports, to help decode new ones |
 
 The stove's thermostat also shows up in Apple Home or Google Home if you expose it through Home Assistant.
@@ -86,5 +91,7 @@ Integración local para controlar una estufa de pellets Red-Pod con módulo WiFi
 **Incluye:** termostato (encender, apagar y temperatura deseada), potencia de combustión (Auto o P1–P5), ventilador de ambiente y canalizado (Auto o 1–5), estado y error en español con su código (por ejemplo "Er44 Puerta abierta"), sensor de problema para avisos, botón para desbloquear errores, temperaturas de humos y ambiente, y horas hasta la revisión.
 
 **Instalación:** en HACS añade este repositorio como "Integración" personalizada, instálala, reinicia y añádela en **Ajustes → Dispositivos y servicios** con la IP del módulo. Conviene darle una IP fija en el router.
+
+**Pellets:** pulsa **Depósito lleno** al llenarlo (o escribe los kg si lo llenas a medias) y verás el % estimado, el tiempo restante y el consumo. La capacidad del depósito es 15 kg por defecto y se puede cambiar. También puedes guardar el **modelo** y el **número de serie**.
 
 **Avisos:** durante el encendido la estufa no acepta la orden de apagar hasta terminar. El botón de desbloquear solo borra el error si la causa ha desaparecido. Úsala bajo tu responsabilidad.

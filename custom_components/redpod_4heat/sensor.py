@@ -15,8 +15,10 @@ from homeassistant.components.sensor import (
     SensorStateClass,
 )
 from homeassistant.const import (
+    PERCENTAGE,
     EntityCategory,
     UnitOfEnergy,
+    UnitOfMass,
     UnitOfPower,
     UnitOfTemperature,
     UnitOfTime,
@@ -123,6 +125,14 @@ async def async_setup_entry(
     entities.append(FourHeatRawSensor(coordinator))
     entities.append(FourHeatHeatPowerSensor(coordinator))
     entities.append(FourHeatHeatEnergySensor(coordinator))
+    entities.extend(
+        [
+            FourHeatPelletPercentSensor(coordinator),
+            FourHeatPelletHoursLeftSensor(coordinator),
+            FourHeatPelletUseSensor(coordinator),
+            FourHeatPelletsConsumedSensor(coordinator),
+        ]
+    )
     async_add_entities(entities)
 
 
@@ -215,6 +225,80 @@ class FourHeatHeatEnergySensor(FourHeatEntity, RestoreSensor):
             # Do not count time while the stove cannot be read.
             self._last_kw = None
         super()._handle_coordinator_update()
+
+
+class FourHeatPelletSensor(FourHeatEntity, SensorEntity):
+    """Base for the pellet sensors: refresh when the pellet data changes."""
+
+    async def async_added_to_hass(self) -> None:
+        await super().async_added_to_hass()
+        self.async_on_remove(
+            self.coordinator.user.async_add_listener(self.async_write_ha_state)
+        )
+
+
+class FourHeatPelletPercentSensor(FourHeatPelletSensor):
+    """Pellets left in the tank, in % (estimated)."""
+
+    _attr_translation_key = "pellet_percent"
+    _attr_state_class = SensorStateClass.MEASUREMENT
+    _attr_native_unit_of_measurement = PERCENTAGE
+
+    def __init__(self, coordinator: FourHeatCoordinator) -> None:
+        super().__init__(coordinator, "pellet_percent")
+
+    @property
+    def native_value(self) -> float | None:
+        return self.coordinator.user.percent
+
+
+class FourHeatPelletHoursLeftSensor(FourHeatPelletSensor):
+    """Hours until the tank is empty at the current pellet use."""
+
+    _attr_translation_key = "pellet_hours_left"
+    _attr_device_class = SensorDeviceClass.DURATION
+    _attr_native_unit_of_measurement = UnitOfTime.HOURS
+    _attr_suggested_display_precision = 1
+
+    def __init__(self, coordinator: FourHeatCoordinator) -> None:
+        super().__init__(coordinator, "pellet_hours_left")
+
+    @property
+    def native_value(self) -> float | None:
+        return self.coordinator.user.hours_left
+
+
+class FourHeatPelletUseSensor(FourHeatPelletSensor):
+    """Pellet use right now (estimated), in kg/h."""
+
+    _attr_translation_key = "pellet_use"
+    _attr_state_class = SensorStateClass.MEASUREMENT
+    _attr_native_unit_of_measurement = "kg/h"
+    _attr_suggested_display_precision = 2
+
+    def __init__(self, coordinator: FourHeatCoordinator) -> None:
+        super().__init__(coordinator, "pellet_use")
+
+    @property
+    def native_value(self) -> float | None:
+        return self.coordinator.user.rate
+
+
+class FourHeatPelletsConsumedSensor(FourHeatPelletSensor):
+    """Total pellets burnt (estimated)."""
+
+    _attr_translation_key = "pellets_consumed"
+    _attr_device_class = SensorDeviceClass.WEIGHT
+    _attr_state_class = SensorStateClass.TOTAL_INCREASING
+    _attr_native_unit_of_measurement = UnitOfMass.KILOGRAMS
+    _attr_suggested_display_precision = 1
+
+    def __init__(self, coordinator: FourHeatCoordinator) -> None:
+        super().__init__(coordinator, "pellets_consumed")
+
+    @property
+    def native_value(self) -> float:
+        return round(self.coordinator.user.consumed, 3)
 
 
 class FourHeatRawSensor(FourHeatEntity, SensorEntity):

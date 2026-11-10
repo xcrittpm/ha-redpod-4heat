@@ -11,6 +11,7 @@ from homeassistant.helpers import issue_registry as ir
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .api import FourHeatClient, FourHeatError, Reading
+from .user_data import UserData
 from .const import (
     AUTO_VALUE,
     CODE_COMBUSTION_PHASE,
@@ -19,8 +20,11 @@ from .const import (
     CODE_STATE,
     DOMAIN,
     HEATING_STATES,
+    IGNITION_STATES,
     MAX_HEAT_KW,
+    MAX_PELLET_KGH,
     MIN_HEAT_KW,
+    MIN_PELLET_KGH,
     SCAN_INTERVAL,
     SERVICE_WARNING_HOURS,
 )
@@ -46,6 +50,7 @@ class FourHeatCoordinator(DataUpdateCoordinator[dict[str, Reading]]):
             update_interval=SCAN_INTERVAL,
         )
         self.client = client
+        self.user = UserData(hass, entry.entry_id)
 
     async def _async_update_data(self) -> dict[str, Reading]:
         try:
@@ -102,6 +107,24 @@ class FourHeatCoordinator(DataUpdateCoordinator[dict[str, Reading]]):
         if level is None or level == AUTO_VALUE or not 1 <= level <= 5:
             return MAX_HEAT_KW
         return self._level_kw(level)
+
+    def estimated_pellet_kgh(self) -> float | None:
+        """Estimate the pellet use from the heat output.
+
+        Uses the manual's figures (0.93 kg/h at minimum, 1.9 kg/h at nominal
+        power) with a straight line in between. During ignition the stove
+        loads pellets too, counted as minimum use.
+        """
+        state = self.value(CODE_STATE)
+        if state is None:
+            return None
+        if state in IGNITION_STATES and state != 1:  # 1 = check-up, no pellets
+            return MIN_PELLET_KGH
+        heat = self.estimated_heat_kw()
+        if not heat:
+            return 0.0
+        share = (heat - MIN_HEAT_KW) / (MAX_HEAT_KW - MIN_HEAT_KW)
+        return round(MIN_PELLET_KGH + share * (MAX_PELLET_KGH - MIN_PELLET_KGH), 3)
 
     @staticmethod
     def _level_kw(level: int) -> float:

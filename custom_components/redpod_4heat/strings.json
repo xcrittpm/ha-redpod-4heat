@@ -28,11 +28,22 @@
     "button": {
       "reset_error": {
         "name": "Reset error"
+      },
+      "tank_filled": {
+        "name": "Tank filled"
       }
     },
     "climate": {
       "stove": {
         "name": "Stove"
+      }
+    },
+    "number": {
+      "tank_capacity": {
+        "name": "Tank capacity"
+      },
+      "pellet_level": {
+        "name": "Pellets in tank (estimated)"
       }
     },
     "select": {
@@ -145,6 +156,26 @@
       },
       "raw_data": {
         "name": "Raw data"
+      },
+      "pellet_percent": {
+        "name": "Pellet level (estimated)"
+      },
+      "pellet_hours_left": {
+        "name": "Pellets time left"
+      },
+      "pellet_use": {
+        "name": "Pellet use (estimated)"
+      },
+      "pellets_consumed": {
+        "name": "Pellets burnt (estimated)"
+      }
+    },
+    "text": {
+      "model": {
+        "name": "Model"
+      },
+      "serial_number": {
+        "name": "Serial number"
       }
     }
   },

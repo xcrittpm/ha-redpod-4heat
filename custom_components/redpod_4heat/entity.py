@@ -5,7 +5,7 @@ from __future__ import annotations
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DOMAIN
+from .const import DEFAULT_MODEL, DOMAIN
 from .coordinator import FourHeatCoordinator
 
 
@@ -22,5 +22,6 @@ class FourHeatEntity(CoordinatorEntity[FourHeatCoordinator]):
             identifiers={(DOMAIN, entry.entry_id)},
             name=entry.title,
             manufacturer="Red-Pod",
-            model="Pellet stove with 4Heat WiFi module",
+            model=coordinator.user.model or DEFAULT_MODEL,
+            serial_number=coordinator.user.serial or None,
         )

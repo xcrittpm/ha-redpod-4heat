@@ -40,6 +40,15 @@ MAX_SETPOINT: Final = 40
 MIN_HEAT_KW: Final = 4.1
 MAX_HEAT_KW: Final = 8.3
 
+# Pellet use from the same manual (at minimum and nominal power), and the
+# default tank size. The tank size can be changed in Home Assistant.
+MIN_PELLET_KGH: Final = 0.93
+MAX_PELLET_KGH: Final = 1.9
+DEFAULT_TANK_KG: Final = 15.0
+
+# Shown on the device page until the user types in the real model.
+DEFAULT_MODEL: Final = "Pellet stove with 4Heat WiFi module"
+
 # Show a repair issue when this many hours or fewer are left until service.
 SERVICE_WARNING_HOURS: Final = 50
 

@@ -28,11 +28,22 @@
     "button": {
       "reset_error": {
         "name": "Desbloquear error"
+      },
+      "tank_filled": {
+        "name": "Depósito lleno"
       }
     },
     "climate": {
       "stove": {
         "name": "Estufa"
+      }
+    },
+    "number": {
+      "tank_capacity": {
+        "name": "Capacidad del depósito"
+      },
+      "pellet_level": {
+        "name": "Pellets en el depósito (estimado)"
       }
     },
     "select": {
@@ -145,6 +156,26 @@
       },
       "raw_data": {
         "name": "Datos brutos"
+      },
+      "pellet_percent": {
+        "name": "Nivel de pellets (estimado)"
+      },
+      "pellet_hours_left": {
+        "name": "Pellets: tiempo restante"
+      },
+      "pellet_use": {
+        "name": "Consumo de pellets (estimado)"
+      },
+      "pellets_consumed": {
+        "name": "Pellets consumidos (estimado)"
+      }
+    },
+    "text": {
+      "model": {
+        "name": "Modelo"
+      },
+      "serial_number": {
+        "name": "Número de serie"
       }
     }
   },
